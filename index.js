@@ -10,7 +10,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/signin' , (req,res)=>{
-    res.send("signin page");
+    res.send("signin page!");
+});
+
+app.post('/register' , (req,res)=>{
+    res.send("register here!");
 });
 
 app.listen(PORT, () => {
