@@ -9,6 +9,10 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+app.post('/signin' , (req,res)=>{
+    res.send("signin page");
+});
+
 app.listen(PORT, () => {
     console.log(`server is running at ${PORT}`)
 })
