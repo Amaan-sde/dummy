@@ -9,13 +9,6 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.post('/signin' , (req,res)=>{
-    res.send("signin page!");
-});
-
-app.post('/register' , (req,res)=>{
-    res.send("register here!");
-});
 
 app.listen(PORT, () => {
     console.log(`server is running at ${PORT}`)
