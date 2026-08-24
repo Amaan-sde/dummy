@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 4000;
 app.get('/', (req, res) => {
     res.send('Hello Amaan 95 !');
 });
+
 app.get('/home' , (req,res)=>{
     res.send("Home Page ! ");
 });
