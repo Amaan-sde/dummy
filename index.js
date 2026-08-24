@@ -1,15 +1,22 @@
-const express = require('express');
-const app = express();
-const dotenv = require("dotenv").config();
+const app = require('./src/app');
+const config = require('./src/config');
+const logger = require('./src/utils/logger');
 
-const PORT = process.env.PORT || 4000;
-
-app.get('/', (req, res) => {
-    res.send('Hello Amaan 95 !');
+const server = app.listen(config.port, () => {
+  logger.info(`Server is running at http://localhost:${config.port} in ${config.env} mode`);
 });
 
-app.use(express.json());
+// Graceful shutdown handling
+const gracefulShutdown = (signal) => {
+  logger.info(`${signal} signal received: closing HTTP server`);
+  server.close(() => {
+    logger.info('HTTP server closed');
+    process.exit(0);
+  });
+};
 
-app.listen(PORT, () => {
-    console.log(`server is running at ${PORT}`)
-})
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+module.exports = server;
+
