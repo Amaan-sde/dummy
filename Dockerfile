@@ -1,23 +1,27 @@
-# Use official Node.js runtime as a parent image
-FROM node:20-alpine
+# Build stage
+FROM node:20-alpine AS dependencies
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 
-# Set the working directory in the container
+# Production runtime stage
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+ENV NODE_ENV=production
+ENV PORT=4000
 
-# Install application dependencies
-RUN npm install
+# Create non-root user for security
+RUN addgroup -S nodejs && adduser -S nodeuser -G nodejs
 
-# Copy the rest of the application code
+COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
-# Expose the application port
-EXPOSE 3000
+USER nodeuser
 
-# Set environment variable default
-ENV PORT=3000
+EXPOSE 4000
 
-# Command to run the app
-CMD ["npm", "start"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health/liveness || exit 1
+
+CMD ["node", "index.js"]
