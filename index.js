@@ -18,6 +18,10 @@ const gracefulShutdown = (signal) => {
   });
 };
 
+app.get('/' , (req,res)=>{
+  res.send("hello world");
+});
+
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
